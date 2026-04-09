@@ -1,6 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.0"
+  version = "~> 21.0"
 
   cluster_name    = var.cluster_name
   cluster_version = "1.29"
@@ -10,9 +10,9 @@ module "eks" {
 
   eks_managed_node_groups = {
     default = {
-      desired_size = 2
-      min_size     = 2
-      max_size     = 4
+      desired_size   = 2
+      min_size       = 2
+      max_size       = 4
       instance_types = ["t3.medium"]
     }
   }
