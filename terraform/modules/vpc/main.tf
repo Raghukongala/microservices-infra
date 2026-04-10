@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ──────────────────────────────────────────
 # VPC
 # ──────────────────────────────────────────
@@ -64,4 +65,18 @@ resource "aws_route_table_association" "public" {
 
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
+=======
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = var.name
+  cidr = var.cidr
+
+  azs             = var.azs
+  private_subnets = var.private_subnets
+  public_subnets  = var.public_subnets
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
+>>>>>>> ffcac67a74213d11886f199667ede2a33d505137
 }

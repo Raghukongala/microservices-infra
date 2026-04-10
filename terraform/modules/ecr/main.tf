@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ──────────────────────────────────────────
 # ECR Repositories
 # ──────────────────────────────────────────
@@ -7,10 +8,21 @@ resource "aws_ecr_repository" "repos" {
   name                 = each.key
   image_tag_mutability = "MUTABLE"
 
+=======
+resource "aws_ecr_repository" "repos" {
+  for_each = toset(var.repo_names)
+
+  name                 = each.value
+  image_tag_mutability = "MUTABLE"
+
+  force_delete = true
+
+>>>>>>> ffcac67a74213d11886f199667ede2a33d505137
   image_scanning_configuration {
     scan_on_push = true
   }
 
+<<<<<<< HEAD
   tags = {
     Name        = each.key
     Environment = var.environment
@@ -41,3 +53,10 @@ resource "aws_ecr_lifecycle_policy" "repos" {
     ]
   })
 }
+=======
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes  = all
+  }
+}
+>>>>>>> ffcac67a74213d11886f199667ede2a33d505137

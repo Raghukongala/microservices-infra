@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'ap-south-1'
+        TF_DIR = 'terraform/envs/dev'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/YOUR_USERNAME/microservices-infra.git'
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                sh '''
+                cd $TF_DIR
+                terraform init
+                '''
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                sh '''
+                cd $TF_DIR
+                terraform validate
+                '''
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                sh '''
+                cd $TF_DIR
+                terraform plan -out=tfplan
+                '''
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input message: 'Approve Infra Deployment?'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                sh '''
+                cd $TF_DIR
+                terraform apply tfplan
+                '''
+            }
+        }
+    }
+}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # microservices-infra
 
 Terraform infrastructure for deploying a microservices EKS cluster on AWS (ap-south-1).
@@ -64,3 +65,6 @@ terraform apply
 - `product-service`
 - `order-service`
 - `api-gateway`
+=======
+# microservices-infra
+>>>>>>> ffcac67a74213d11886f199667ede2a33d505137

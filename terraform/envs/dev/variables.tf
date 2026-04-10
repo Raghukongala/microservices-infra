@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 variable "aws_region" {
   description = "AWS region"
   type        = string
@@ -71,4 +72,8 @@ variable "ecr_repos" {
   description = "List of ECR repository names"
   type        = list(string)
   default     = ["user-service", "product-service", "order-service", "api-gateway"]
+=======
+variable "region" {
+  default = "ap-south-1"
+>>>>>>> ffcac67a74213d11886f199667ede2a33d505137
 }

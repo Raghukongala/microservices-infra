@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
@@ -47,3 +48,8 @@ variable "environment" {
   description = "Environment name"
   type        = string
 }
+=======
+variable "cluster_name" {}
+variable "vpc_id" {}
+variable "private_subnets" { type = list(string) }
+>>>>>>> ffcac67a74213d11886f199667ede2a33d505137
