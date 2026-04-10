@@ -6,12 +6,19 @@ module "eks" {
   kubernetes_version = "1.29"
 
   vpc_id     = var.vpc_id
-  subnet_ids = var.private_subnets
 
-  # 🔥 REQUIRED FOR IAM + SERVICE ACCOUNTS
+  # ✅ USE PUBLIC SUBNETS (IMPORTANT)
+  subnet_ids = var.public_subnets
+
   enable_irsa = true
 
-  # 🔥 EKS MANAGED NODE GROUP (FIXED)
+  # ✅ Allow API access (debug + node join)
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
+
+  # ✅ Automatically manage aws-auth
+  enable_cluster_creator_admin_permissions = true
+
   eks_managed_node_groups = {
     default = {
       desired_size   = 2
@@ -20,15 +27,21 @@ module "eks" {
 
       instance_types = ["t3.medium"]
 
-      ami_type       = "AL2_x86_64"
-      capacity_type  = "ON_DEMAND"
+      ami_type      = "AL2_x86_64"
+      capacity_type = "ON_DEMAND"
 
-      # 🔥 CRITICAL FIX (IAM POLICIES)
+      # ✅ CRITICAL: GIVE PUBLIC IP (NO NAT FIX)
+      associate_public_ip_address = true
+
+      # ✅ IAM POLICIES (CORRECT)
       iam_role_additional_policies = {
         AmazonEKSWorkerNodePolicy          = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
         AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
         AmazonEKS_CNI_Policy               = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
       }
+
+      # ✅ Optional (for SSH debugging)
+      # key_name = "your-keypair-name"
     }
   }
 
