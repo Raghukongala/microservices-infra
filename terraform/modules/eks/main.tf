@@ -14,28 +14,28 @@ module "eks" {
   # Networking
   # ──────────────────────────────────────────
   vpc_id     = var.vpc_id
-  subnet_ids = var.public_subnets   # public subnets (no NAT gateway)
+  subnet_ids = var.public_subnets
 
   # ──────────────────────────────────────────
-  # API Server Endpoint Access
+  # API Endpoint Access  ← v21 exact names
   # ──────────────────────────────────────────
-  cluster_endpoint_public_access  = true
-  cluster_endpoint_private_access = true
+  endpoint_public_access  = true
+  endpoint_private_access = true
 
   # ──────────────────────────────────────────
-  # IRSA (IAM Roles for Service Accounts)
+  # IRSA
   # ──────────────────────────────────────────
   enable_irsa = true
 
   # ──────────────────────────────────────────
-  # Auth — grants cluster-creator admin rights
+  # Auth
   # ──────────────────────────────────────────
   enable_cluster_creator_admin_permissions = true
 
   # ──────────────────────────────────────────
-  # Core Addons (required for a working cluster)
+  # Addons  ← v21 uses "addons" not "cluster_addons"
   # ──────────────────────────────────────────
-  cluster_addons = {
+  addons = {
     coredns = {
       most_recent = true
     }
@@ -43,7 +43,8 @@ module "eks" {
       most_recent = true
     }
     vpc-cni = {
-      most_recent = true
+      most_recent    = true
+      before_compute = true
     }
   }
 
@@ -55,12 +56,11 @@ module "eks" {
       desired_size   = 2
       min_size       = 2
       max_size       = 4
-
       instance_types = ["t3.medium"]
       ami_type       = "AL2_x86_64"
       capacity_type  = "ON_DEMAND"
 
-      # Required when using public subnets (no NAT)
+      # Required — public subnets, no NAT gateway
       associate_public_ip_address = true
 
       iam_role_additional_policies = {
