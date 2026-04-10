@@ -7,14 +7,16 @@ module "eks" {
 
   vpc_id     = var.vpc_id
 
-  # ✅ USE PUBLIC SUBNETS (IMPORTANT)
+  # ✅ USE PUBLIC SUBNETS (since no NAT)
   subnet_ids = var.public_subnets
 
   enable_irsa = true
 
-  # ✅ Allow API access (debug + node join)
-  cluster_endpoint_public_access  = true
-  cluster_endpoint_private_access = true
+  # ✅ FIXED (v21 syntax)
+  cluster_endpoint_access = {
+    public  = true
+    private = true
+  }
 
   # ✅ Automatically manage aws-auth
   enable_cluster_creator_admin_permissions = true
@@ -30,17 +32,17 @@ module "eks" {
       ami_type      = "AL2_x86_64"
       capacity_type = "ON_DEMAND"
 
-      # ✅ CRITICAL: GIVE PUBLIC IP (NO NAT FIX)
+      # ✅ CRITICAL FIX (no NAT → give public IP)
       associate_public_ip_address = true
 
-      # ✅ IAM POLICIES (CORRECT)
+      # ✅ IAM POLICIES
       iam_role_additional_policies = {
         AmazonEKSWorkerNodePolicy          = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
         AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
         AmazonEKS_CNI_Policy               = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
       }
 
-      # ✅ Optional (for SSH debugging)
+      # ✅ Optional (enable if needed)
       # key_name = "your-keypair-name"
     }
   }
